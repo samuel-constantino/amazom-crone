@@ -33,6 +33,18 @@ const create = async (user) => {
     return '';
 };
 
+const login = async (data) => {
+    const { email, password } = data;
+
+    const result = await userModel.getByEmail(email);
+
+    if (!result) return null;
+    if (result.user.password !== password) return null;
+
+    return result.user;
+};
+
 module.exports = {
     create,
+    login
 };

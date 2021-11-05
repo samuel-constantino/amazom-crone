@@ -13,7 +13,13 @@ const create = rescue(async (req, res) => {
 });
 
 const login = rescue(async (req, res) => {
-    res.status(200).json({message: 'userController login OK'});
+    const { email, password } = req.body;
+
+    const user = await userService.login({ email, password });
+
+    if (!user) return res.status(400).json({message: 'Email ou senha inválida'});
+
+    return res.status(200).json({message: `Bem Vindo(a) ${user.name}`});
 });
 
 const buy = rescue(async (req, res) => {
