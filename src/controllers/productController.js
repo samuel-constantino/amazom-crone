@@ -14,6 +14,6 @@ const create = rescue(async (req, res) => {
 
 module.exports = {
     create,
-    getAll,
-    getByCategory
+    // getAll,
+    // getByCategory
 };

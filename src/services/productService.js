@@ -10,10 +10,10 @@ const productExists = async (name) => {
 };
 
 const create = async (product) => {
-    const { err } = productValid(product);
+    const result = productValid(product);
 
-    if (err) return {
-        error: { code: 400, message: err },
+    if (result.err) return {
+        err: { code: 400, message: err.message },
     }
 
     const productFound = await productExists(product.name);
@@ -22,9 +22,9 @@ const create = async (product) => {
         err: { code: 400, message: 'Produto já existe' },
     }
 
-    const result = await productModel.create(product);
+    const create = await productModel.create(product);
 
-    if (!result) return {
+    if (!create) return {
         error: { code: 500, message: "Erro ao inserir produto" },
     }
 
