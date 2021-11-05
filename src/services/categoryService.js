@@ -1,12 +1,6 @@
 const { categoryModel } = require('../models');
 const { categoryValid } = require('../schemas');
 
-const formatCategory = (category) => {
-    const { name } = category;
-
-    return { name };
-}
-
 const categoryExists = async (name) => {
     const category = await categoryModel.getByName(name);
 
@@ -38,9 +32,7 @@ const create = async (name) => {
 };
 
 const getAll = async () => {
-    const result = await categoryModel.getAll();
-
-    const categories = result.map(formatCategory);
+    const categories = await categoryModel.getAll();
 
     return categories;
 };
