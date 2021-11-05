@@ -9,6 +9,8 @@ app.use(express.json());
 
 app.use('/user', userRouter);
 
+app.use('/category', categoryRouter);
+
 app.use('/product', productRouter);
 
 const PORT = process.env.PORT || 3000;
