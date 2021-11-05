@@ -20,5 +20,12 @@
   "bugs": {
     "url": "https://github.com/samuel-constantino/amazom-crone/issues"
   },
-  "homepage": "https://github.com/samuel-constantino/amazom-crone#readme"
+  "homepage": "https://github.com/samuel-constantino/amazom-crone#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "joi": "^17.4.2",
+    "nodemailer": "^6.7.0",
+    "nodemon": "^2.0.14",
+    "rescue": "^6.0.4"
+  }
 }
