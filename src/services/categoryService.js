@@ -1,25 +1,31 @@
 const { categoryModel } = require('../models');
-const categoryValid = require('../schemas');
+const { categoryValid } = require('../schemas');
 
-const create = async (user) => {
-    const { err } = categoryValid(user);
+const categoryExists = async (name) => {
+    const category = await categoryModel.getByName(name);
+
+    if (!category) return false;
+
+    return true;
+};
+
+const create = async (name) => {
+    const { err } = categoryValid(name);
 
     if (err) return {
         error: { code: 400, message: err.message },
     }
 
-    const userFound = await userExists(user.email);
+    const categoryFound = await categoryExists(name);
 
-    if (userFound) return {
-        error: { code: 400, message: 'Este usuário já existe' },
+    if (categoryFound) return {
+        err: { code: 400, message: 'Categoria já existe' },
     }
 
-    const result = await userModel.create(user);
+    const result = await categoryModel.create(name);
 
-    if (!result) {
-        return {
-            error: { code: 500, message: "Erro ao inserir usuário" },
-        }
+    if (!result) return {
+        error: { code: 500, message: "Erro ao inserir categoria" },
     }
 
     return '';
