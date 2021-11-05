@@ -1,7 +1,19 @@
 const rescue = require('express-rescue');
 
-const userController = rescue(async (req, res) => {
-    res.status(200).json({message: 'userController OK'});
+const create = rescue(async (req, res) => {
+    res.status(200).json({message: 'userController create OK'});
 });
 
-module.exports = userController;
+const login = rescue(async (req, res) => {
+    res.status(200).json({message: 'userController login OK'});
+});
+
+const buy = rescue(async (req, res) => {
+    res.status(200).json({message: 'userController buy OK'});
+});
+
+module.exports = {
+    create,
+    login,
+    buy
+};
