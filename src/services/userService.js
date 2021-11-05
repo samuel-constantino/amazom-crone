@@ -1,8 +1,8 @@
 const { userModel } = require('../models');
 const { userValid } = require('../schemas');
 
-const userExists = async (name) => {
-    const user = await userModel.getByName(name);
+const userExists = async (email) => {
+    const user = await userModel.getByEmail(email);
 
     if (!user) return false;
 
@@ -16,7 +16,7 @@ const create = async (user) => {
         error: { code: 400, message: err.message },
     }
 
-    const userFound = await userExists(user.name);
+    const userFound = await userExists(user.email);
 
     if (userFound) return {
         error: { code: 400, message: 'Este usuário já existe' },
