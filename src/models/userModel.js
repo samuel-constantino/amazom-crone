@@ -1,17 +1,24 @@
 const connection = require('./connection');
 
+const getByName = async (name) => {
+    const db = await connection();
+
+    const user = await db.collection('Users').findOne({"user.name": name});
+    
+    return user;
+};
+
 const create = async (user) => {
     const db = await connection();
 
-    const result = await db.collection('Users').insertOne({user});
+    const { insertedId } = await db.collection('Users').insertOne({user});
 
-    if (!result.insertedId) {
-        return {
-            error: "Erro ao inserir usuário",
-        }
-    }
+    if (!insertedId) return false;
+
+    return true;
 };
 
 module.exports = {
     create,
+    getByName,
 };

@@ -5,13 +5,11 @@ const { userService } = require('../services');
 const create = rescue(async (req, res) => {
     const { name, email, password } = req.body;
 
-    const message = await userService.create({name, email, password});
+    const { error } = await userService.create({name, email, password});
 
-    const { error, sucess } = message;
+    if (error) return res.status(error.code).json({message: error.message});
 
-    if (error) res.status(error.code).json({message: error.message});
-
-    res.status(201).json({message: sucess.message});
+    return res.status(201).json({message: 'Usuário criado com sucesso'});
 });
 
 const login = rescue(async (req, res) => {
