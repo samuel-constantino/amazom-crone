@@ -16,16 +16,16 @@ const create = async (product) => {
         error: { code: 400, message: err },
     }
 
-    const productFound = await productExists(name);
+    const productFound = await productExists(product.name);
 
     if (productFound) return {
-        err: { code: 400, message: 'Categoria já existe' },
+        err: { code: 400, message: 'Produto já existe' },
     }
 
-    const result = await productModel.create(name);
+    const result = await productModel.create(product);
 
     if (!result) return {
-        error: { code: 500, message: "Erro ao inserir categoria" },
+        error: { code: 500, message: "Erro ao inserir produto" },
     }
 
     return '';
