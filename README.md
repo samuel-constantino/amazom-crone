@@ -12,7 +12,7 @@
   </a>
 </p>
 
-> Esta aplicação simula um e-commerce com CRUD utilizando NodeJS, com as bibliotecas Express, Express-rescue, Joi, DotEnv, Nodemailer eMongoDB.
+> Esta aplicação simula um e-commerce com CRUD utilizando NodeJS, com as bibliotecas Express, Express-rescue, Joi, DotEnv, Nodemailer e MongoDB.
 
 ### 🏠 [Homepage](https://github.com/samuel-constantino/amazom-crone#readme)
 
