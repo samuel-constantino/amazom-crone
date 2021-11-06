@@ -1,5 +1,5 @@
 const { userModel } = require('../models');
-const { userValid } = require('../schemas');
+const { userValid, formatUser } = require('../schemas');
 
 const getAll = async () => {
     try{
@@ -8,7 +8,7 @@ const getAll = async () => {
         // verifica se users é um objeto de erro
         if (users.code) return { code: users.code, message: users.message };
     
-        return users;
+        return users.map(formatUser);
     } catch ({ code, message }) {
         return { code, message };
     }
