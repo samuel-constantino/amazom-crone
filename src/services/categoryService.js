@@ -1,40 +1,45 @@
 const { categoryModel } = require('../models');
 const { categoryValid } = require('../schemas');
 
-const categoryExists = async (name) => {
-    const category = await categoryModel.getByName(name);
-
-    if (!category) return false;
-
-    return true;
-};
-
 const create = async (name) => {
-    const { err } = categoryValid(name);
+    try{
+        const { err } = categoryValid(name);
 
-    if (err) return {
-        error: { code: 400, message: err.message },
-    }
+        if (err) return { code: 400, message: err.message }
 
-    const categoryFound = await categoryExists(name);
+        // busca cetegoria pelo nome
+        const categoryFound = await categoryModel.getByName(name)
 
-    if (categoryFound) return {
-        err: { code: 400, message: 'Categoria já existe' },
-    }
+        // verifica se o objeto retornado possui um objeto de erro
+        if (categoryFound.code) return { code: categoryFound.code, message: categoryFound.message };
 
-    const result = await categoryModel.create(name);
+        // verifica se categoria já existe
+        if (categoryFound) return { code: 400, message: 'Categoria já existe' }
 
-    if (!result) return {
-        error: { code: 500, message: "Erro ao inserir categoria" },
-    }
+        const result = await categoryModel.create(name);
 
-    return '';
+        // verifica se result é um objeto de erro
+        if(result.code) return { code: result.code, message: result.message };
+
+        if (!result) return { code: 500, message: "Erro ao inserir categoria" }
+
+        return '';
+    } catch ({ code, message }) {
+        return { code, message };
+    }  
 };
 
 const getAll = async () => {
-    const categories = await categoryModel.getAll();
+    try{
+        const categories = await categoryModel.getAll();
 
-    return categories;
+        // verifica se categories é um objeto de erro
+        if (categories.code) return { code: categories.code, message: categories.message };
+    
+        return categories;
+    } catch ({ code, message }) {
+        return { code, message };
+    }
 };
 
 module.exports = {

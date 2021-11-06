@@ -1,54 +1,63 @@
 const { userModel } = require('../models');
 const { userValid } = require('../schemas');
 
-const userExists = async (email) => {
-    try {
-        const user = await userModel.getByEmail(email);
+const getAll = async () => {
+    try{
+        const users = await userModel.getAll();
+
+        // verifica se users é um objeto de erro
+        if (users.code) return { code: users.code, message: users.message };
     
-        if (!user) return false;
-    
-        return true;
-    } catch (e) {
-        next(e)
+        return users;
+    } catch ({ code, message }) {
+        return { code, message };
     }
 };
 
 const create = async (user) => {
-    const { err } = userValid(user);
+    try {
+        const { code, message } = userValid(user);
+        
+        // vefifica se houve erro de validação
+        if (code) return { code, message }
+        
+        // busca usuário por id
+        const userFound = await userModel.getByEmail(user.email);
 
-    if (err) return {
-        error: { code: 400, message: err.message },
+        if (userFound) {
+            // verifica se userFound é um objeto de erro
+            if (userFound.code) return { code: userFound.code, message: userFound.message }
+
+            return { code: 400, message: 'Este usuário já existe' };
+        };
+
+        const result = await userModel.create(user);
+    
+        if (!result) return { code: 500, message: "Erro ao inserir usuário" }
+    
+        return '';
+    } catch ({ code, message }) {
+        return { code, message };
     }
-
-    const userFound = await userExists(user.email);
-
-    if (userFound) return {
-        error: { code: 400, message: 'Este usuário já existe' },
-    }
-
-    const result = await userModel.create(user);
-
-    if (!result) {
-        return {
-            error: { code: 500, message: "Erro ao inserir usuário" },
-        }
-    }
-
-    return '';
 };
 
 const login = async (data) => {
-    const { email, password } = data;
-
-    const result = await userModel.getByEmail(email);
-
-    if (!result) return null;
-    if (result.user.password !== password) return null;
-
-    return result.user;
+    try {
+        const { email, password } = data;
+    
+        const result = await userModel.getByEmail(email);
+    
+        if (!result) return null;
+        if (result.user.password !== password) return null;
+    
+        return result.user;
+    } catch ({ code, message }) {
+        return { code, message };
+    }
 };
 
 module.exports = {
+    getAll,
     create,
     login
 };

@@ -1,29 +1,41 @@
 const connection = require('./connection');
 
 const getAll = async () => {
-    const db = await connection();
-
-    const result = await db.collection('Category').find().toArray();
-
-    return result;
+    try{
+        const db = await connection();
+    
+        const categories = await db.collection('Categories').find().toArray();
+    
+        return categories;
+    } catch ({ code, message }) {
+        return { code, message };
+    }
 };
 
 const getByName = async (name) => {
-    const db = await connection();
-
-    const category = await db.collection('Category').findOne({name});
-
-    return category;
+    try{
+        const db = await connection();
+    
+        const category = await db.collection('Categories').findOne({name});
+    
+        return category;
+    } catch ({ code, message }) {
+        return { code, message };
+    }
 };
 
 const create = async (name) => {
-    const db = await connection();
-
-    const { insertedId } = await db.collection('Category').insertOne({name});
-
-    if (!insertedId) return false;
-
-    return true;
+    try{
+        const db = await connection();
+    
+        const { insertedId } = await db.collection('Categories').insertOne({name});
+    
+        if (!insertedId) return false;
+    
+        return true;
+    } catch ({ code, message }) {
+        return { code, message };
+    }
 };
 
 module.exports = {

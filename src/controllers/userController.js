@@ -2,12 +2,25 @@ const rescue = require('express-rescue');
 
 const { userService } = require('../services');
 
-const create = rescue(async (req, res) => {
+const getAll = rescue(async (_req, res, next) => {
+    try {
+        const result = await userService.getAll();
+
+        if (result.code) return next({code: result.code, message: result.message});
+
+    return res.status(200).json(result);
+    } catch ({ code, message }) {
+        next({ code, message });
+    }
+});
+
+const create = rescue(async (req, res, next) => {
     const { name, email, password } = req.body;
 
-    const { error } = await userService.create({name, email, password});
+    const result = await userService.create({name, email, password});
 
-    if (error) return res.status(error.code).json({message: error.message});
+    // verifica se houve erro na criação de usuário
+    if (result !== '') return next({code: result.code, message: result.message});
 
     return res.status(201).json({message: 'Usuário criado com sucesso'});
 });
@@ -27,6 +40,7 @@ const buy = rescue(async (req, res) => {
 });
 
 module.exports = {
+    getAll,
     create,
     login,
     buy
