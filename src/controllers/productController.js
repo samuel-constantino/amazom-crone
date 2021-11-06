@@ -7,7 +7,8 @@ const create = rescue(async (req, res, next) => {
 
     const result = await productService.create({ name, description, categoryId, price });
 
-    if(result.code) return next({ code: result.code, message: result.message });
+    // verifica se houve erro na criação do produto
+    if(result != '') return next({ code: result.code, message: result.message });
 
     return res.status(201).json({message: 'Produto cadastrado com sucesso!'}); 
 });

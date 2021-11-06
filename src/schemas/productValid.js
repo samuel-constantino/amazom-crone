@@ -10,7 +10,7 @@ const userValid = (user) => {
 
     const { error } = schema.validate(user);
 
-    if (error) return { err: error }
+    if (error) return { code: 400, message: error }
 
     return '';
 };

@@ -1,34 +1,42 @@
+const { ObjectId } = require('mongodb');
+
 const { productModel } = require('../models');
 const { productValid } = require('../schemas');
 
-const productExists = async (name) => {
-    const product = await productModel.getByName(name);
-
-    if (!product) return false;
-
-    return true;
-};
-
 const create = async (product) => {
-    const result = productValid(product);
+    try {
+        // verifica se id é válido
+        if(!ObjectId.isValid(product.categoryId)) {
+            return { code: 400, message: 'Id da categoria inválido'};
+        }
 
-    if (result.err) return {
-        err: { code: 400, message: err.message },
+        const { code, message } = productValid(product);
+
+        // vefifica se houve erro de validação
+        if (code) return { code, message }
+    
+        // busca produto pelo nome
+        const productFound = await productModel.getByName(product.name);
+    
+        if (productFound) {
+            // verifica se productFound é um objeto de erro
+            if (productFound.code) return { code: productFound.code, message: productFound.message }
+
+
+            return { code: 400, message: 'Produto já existe' }
+        }
+    
+        const result = await productModel.create(product);
+    
+        if (!result) return { code: 500, message: "Erro ao inserir produto" };
+
+        // verifica se result é um objeto de erro
+        if(result.code) return { code: result.code, message: result.message };
+    
+        return '';
+    } catch ({ code, message }) {
+        return { code, message };
     }
-
-    const productFound = await productExists(product.name);
-
-    if (productFound) return {
-        err: { code: 400, message: 'Produto já existe' },
-    }
-
-    const create = await productModel.create(product);
-
-    if (!create) return {
-        error: { code: 500, message: "Erro ao inserir produto" },
-    }
-
-    return '';
 };
 
 const getAll = async () => {

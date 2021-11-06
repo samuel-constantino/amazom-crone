@@ -28,7 +28,7 @@ const create = async (user) => {
             // verifica se userFound é um objeto de erro
             if (userFound.code) return { code: userFound.code, message: userFound.message }
 
-            return { code: 400, message: 'Este usuário já existe' };
+            return { code: 400, message: 'Usuário já existe' };
         };
 
         const result = await userModel.create(user);

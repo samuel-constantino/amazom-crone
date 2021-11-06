@@ -17,13 +17,17 @@ const getByName = async (name) => {
 };
 
 const create = async (product) => {
-    const db = await connection();
+    try {
+        const db = await connection();
 
-    const { insertedId } = await db.collection('Products').insertOne({...product});
+        const { insertedId } = await db.collection('Products').insertOne({...product});
 
-    if (!insertedId) return false;
+        if (!insertedId) return false;
 
     return true;
+    } catch ({ code, message }) {
+        return { code, message };
+    }  
 };
 
 module.exports = {
