@@ -7,7 +7,7 @@ const categoryValid = (category) => {
 
     const { error } = schema.validate(category);
 
-    if (error) return { message: error }
+    if (error) return { code: 400, message: error }
 
     return '';
 };

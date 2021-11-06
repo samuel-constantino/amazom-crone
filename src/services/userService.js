@@ -21,7 +21,7 @@ const create = async (user) => {
         // vefifica se houve erro de validação
         if (code) return { code, message }
         
-        // busca usuário por id
+        // busca usuário pelo email
         const userFound = await userModel.getByEmail(user.email);
 
         if (userFound) {
@@ -33,7 +33,10 @@ const create = async (user) => {
 
         const result = await userModel.create(user);
     
-        if (!result) return { code: 500, message: "Erro ao inserir usuário" }
+        if (!result) return { code: 500, message: "Erro ao inserir usuário" };
+
+        // verifica se result é um objeto de erro
+        if(result.code) return { code: result.code, message: result.message };
     
         return '';
     } catch ({ code, message }) {

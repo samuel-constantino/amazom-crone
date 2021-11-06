@@ -29,7 +29,6 @@ const create = async (user) => {
         const db = await connection();
 
         const { insertedId } = await db.collection('Users').insertOne({...user});
-        console.log(insertedId)
     
         if (!insertedId) return false;
     

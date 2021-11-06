@@ -22,7 +22,7 @@ const create = rescue(async (req, res, next) => {
     // verifica se houve erro na criação de usuário
     if (result !== '') return next({code: result.code, message: result.message});
 
-    return res.status(201).json({message: 'Usuário criado com sucesso'});
+    return res.status(201).json({message: 'Usuário criado com sucesso!'});
 });
 
 const login = rescue(async (req, res, next) => {
