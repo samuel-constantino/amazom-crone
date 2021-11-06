@@ -12,12 +12,12 @@ const create = rescue(async (req, res) => {
     return res.status(201).json({message: 'Usuário criado com sucesso'});
 });
 
-const login = rescue(async (req, res) => {
+const login = rescue(async (req, res, next) => {
     const { email, password } = req.body;
 
     const user = await userService.login({ email, password });
-
-    if (!user) return res.status(400).json({message: 'Email ou senha inválida'});
+    
+    if (!user) return next({code: 400, message: 'Email ou senha inválida'});
 
     return res.status(200).json({message: `Bem Vindo(a) ${user.name}`});
 });

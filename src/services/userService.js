@@ -2,11 +2,15 @@ const { userModel } = require('../models');
 const { userValid } = require('../schemas');
 
 const userExists = async (email) => {
-    const user = await userModel.getByEmail(email);
-
-    if (!user) return false;
-
-    return true;
+    try {
+        const user = await userModel.getByEmail(email);
+    
+        if (!user) return false;
+    
+        return true;
+    } catch (e) {
+        next(e)
+    }
 };
 
 const create = async (user) => {
