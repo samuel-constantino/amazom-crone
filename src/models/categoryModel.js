@@ -1,10 +1,14 @@
 const connection = require('./connection');
+const logReport = require('../schemas/logReport');
 
 const getAll = async () => {
     try{
         const db = await connection();
     
         const categories = await db.collection('Categories').find().toArray();
+
+        // imprime log de consulta
+        logReport('info', 200, `Consulta: Todos usuários.`);
     
         return categories;
     } catch ({ code, message }) {
@@ -31,6 +35,9 @@ const create = async (name) => {
         const { insertedId } = await db.collection('Categories').insertOne({name});
     
         if (!insertedId) return false;
+
+        // imprime log de cadastro
+        logReport('info', 201, `Cadastro: Categoria ${insertedId}`);
     
         return true;
     } catch ({ code, message }) {

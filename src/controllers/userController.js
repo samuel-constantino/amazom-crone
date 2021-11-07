@@ -28,11 +28,12 @@ const create = rescue(async (req, res, next) => {
 const login = rescue(async (req, res, next) => {
     const { email, password } = req.body;
 
-    const user = await userService.login({ email, password });
+    const result = await userService.login({ email, password });
     
-    if (!user) return next({code: 400, message: 'Email ou senha inválida'});
+    // verifica se ocorreu erro no login
+    if (result.code) return next({ code: result.code, message: result.message });
 
-    return res.status(200).json({message: `Bem Vindo(a) ${user.name}`});
+    return res.status(200).json({message: `Bem Vindo(a) ${result.name}`});
 });
 
 const buy = rescue(async (req, res) => {

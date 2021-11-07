@@ -1,12 +1,13 @@
 const { userModel } = require('../models');
 const { userValid, formatUser } = require('../schemas');
+const logReport = require('../schemas/logReport');
 
 const getAll = async () => {
     try{
         const users = await userModel.getAll();
 
         // verifica se users é um objeto de erro
-        if (users.code) return { code: users.code, message: users.message };
+        if (users.code) throw { code: users.code, message: users.message };
     
         return users.map(formatUser);
     } catch ({ code, message }) {
@@ -49,11 +50,17 @@ const login = async (data) => {
         const { email, password } = data;
     
         const result = await userModel.getByEmail(email);
+
+        if (result.code) throw {code: result.code, message: result.message};
+
+        if (!result) throw {code: 400, message: 'Erro de login: email não encontrado'};
+
+        if (result.password !== password) throw {code: 400, message: 'Erro de login: senha inválida'};
+
+        // imprime log de login
+        logReport('info', 200, `Login: Usuário ${result._id}`);
     
-        if (!result) return null;
-        if (result.user.password !== password) return null;
-    
-        return result.user;
+        return result;
     } catch ({ code, message }) {
         return { code, message };
     }
