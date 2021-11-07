@@ -1,6 +1,8 @@
 const express = require('express');
 require('dotenv').config()
 
+const logReport = require('./schemas/logReport');
+
 const { userRouter, categoryRouter, productRouter } = require('./routes');
 
 const error = require('./middlewares/error');
@@ -18,4 +20,4 @@ app.use('/product', productRouter);
 app.use(error);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Ouvindo a porta ${PORT}`));
+app.listen(PORT, () => logReport('info', 200, `Ouvindo a porta ${PORT}`));

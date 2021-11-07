@@ -1,4 +1,5 @@
 const rescue = require('express-rescue');
+const logger = require('../logger');
 
 const { userService } = require('../services');
 
@@ -21,6 +22,9 @@ const create = rescue(async (req, res, next) => {
 
     // verifica se houve erro na criação de usuário
     if (result !== '') return next({code: result.code, message: result.message});
+
+    // imprime log de sucesso
+    logger.info(`CODE: 201 | MESSAGE: Usuário criando com sucesso!`);
 
     return res.status(201).json({message: 'Usuário criado com sucesso!'});
 });
