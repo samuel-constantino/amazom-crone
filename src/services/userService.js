@@ -4,12 +4,12 @@ const logReport = require('../schemas/logReport');
 
 const getAll = async () => {
     try{
-        const users = await userModel.getAll();
+        const result = await userModel.getAll();
 
-        // verifica se users é um objeto de erro
-        if (users.code) throw { code: users.code, message: users.message };
+        // verifica se result é um objeto de erro
+        if (result.code) throw { code: result.code, message: result.message };
     
-        return users.map(formatUser);
+        return result.map(formatUser);
     } catch ({ code, message }) {
         return { code, message };
     }

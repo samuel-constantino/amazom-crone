@@ -1,12 +1,35 @@
 const connection = require('./connection');
 const logReport = require('../schemas/logReport');
+const { ObjectId } = require('mongodb');
 
-const getAll = async () => {
-    const db = await connection();
+const getAll = async (category) => {
+    try{
+        const db = await connection();
 
-    const result = await db.collection('Products').find().toArray();
+        let products = [];
 
-    return result;
+        if (!category || category === '') {
+            products = await db.collection('Products').find().toArray();
+
+            // imprime log de consulta
+            logReport('info', 200, `Consulta : Todos os produtos.`);
+        } else {
+            const obj = await db.collection('Categories').findOne({name: category});
+            
+            if (!obj) throw {code: 400, message: 'Categoria inválida.'}
+
+            const categoryId = ObjectId(obj._id).toString();
+
+            products = await db.collection('Products').find({categoryId}).toArray();
+
+            // imprime log de consulta
+            logReport('info', 200, `Consulta : Produtos pela categoria ${category}`);
+        };
+        
+        return products;
+    } catch ({ code, message }) {
+        return { code, message };
+    }
 };
 
 const getByName = async (name) => {
@@ -35,7 +58,7 @@ const create = async (product) => {
 };
 
 module.exports = {
-    create,
-    getByName,
     getAll,
+    getByName,
+    create,
 };

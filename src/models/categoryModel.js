@@ -8,7 +8,7 @@ const getAll = async () => {
         const categories = await db.collection('Categories').find().toArray();
 
         // imprime log de consulta
-        logReport('info', 200, `Consulta: Todos usuários.`);
+        logReport('info', 200, `Consulta: Todas categorias.`);
     
         return categories;
     } catch ({ code, message }) {

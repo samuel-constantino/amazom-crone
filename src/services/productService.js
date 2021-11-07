@@ -3,6 +3,19 @@ const { ObjectId } = require('mongodb');
 const { productModel } = require('../models');
 const { productValid } = require('../schemas');
 
+const getAll = async (category) => {
+    try{
+        const result = await productModel.getAll(category);
+
+        // verifica se result é um objeto de erro
+        if (result.code) throw { code: result.code, message: result.message };
+    
+        return result;
+    } catch ({ code, message }) {
+        return { code, message };
+    }
+};
+
 const create = async (product) => {
     try {
         // verifica se id é válido
@@ -39,15 +52,7 @@ const create = async (product) => {
     }
 };
 
-const getAll = async () => {
-    const result = await productModel.getAll();
-
-    const categories = result.map(formatProduct);
-
-    return categories;
-};
-
 module.exports = {
+    getAll,
     create,
-    getAll
 }
