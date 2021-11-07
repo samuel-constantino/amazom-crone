@@ -1,5 +1,4 @@
 const rescue = require('express-rescue');
-const logger = require('../logger');
 
 const { userService } = require('../services');
 
@@ -23,20 +22,18 @@ const create = rescue(async (req, res, next) => {
     // verifica se houve erro na criação de usuário
     if (result !== '') return next({code: result.code, message: result.message});
 
-    // imprime log de sucesso
-    logger.info(`CODE: 201 | MESSAGE: Usuário criando com sucesso!`);
-
     return res.status(201).json({message: 'Usuário criado com sucesso!'});
 });
 
 const login = rescue(async (req, res, next) => {
     const { email, password } = req.body;
 
-    const user = await userService.login({ email, password });
+    const result = await userService.login({ email, password });
     
-    if (!user) return next({code: 400, message: 'Email ou senha inválida'});
+    // verifica se ocorreu erro no login
+    if (result.code) return next({ code: result.code, message: result.message });
 
-    return res.status(200).json({message: `Bem Vindo(a) ${user.name}`});
+    return res.status(200).json({message: `Bem Vindo(a) ${result.name}`});
 });
 
 const buy = rescue(async (req, res) => {

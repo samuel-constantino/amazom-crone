@@ -29,6 +29,7 @@
     "joi": "^17.4.2",
     "mongodb": "^4.1.4",
     "nodemailer": "^6.7.0",
-    "nodemon": "^2.0.14"
+    "nodemon": "^2.0.14",
+    "winston": "^3.3.3"
   }
 }

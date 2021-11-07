@@ -48,12 +48,13 @@ const login = async (data) => {
     try {
         const { email, password } = data;
     
-        const result = await userModel.getByEmail(email);
+        const result = await userModel.login(email);
+
+        if (result.code) throw {code: result.code, message: result.message};
+
+        if (result.password !== password) throw {code: 400, message: 'Erro de login: senha inválida'};
     
-        if (!result) return null;
-        if (result.user.password !== password) return null;
-    
-        return result.user;
+        return result;
     } catch ({ code, message }) {
         return { code, message };
     }
