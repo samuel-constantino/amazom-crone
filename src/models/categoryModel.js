@@ -1,10 +1,14 @@
 const connection = require('./connection');
+const logReport = require('../schemas/logReport');
 
 const getAll = async () => {
     try{
         const db = await connection();
     
         const categories = await db.collection('Categories').find().toArray();
+
+        // imprime log de consulta
+        logReport('info', 200, `Consulta: Todos usuários.`);
     
         return categories;
     } catch ({ code, message }) {

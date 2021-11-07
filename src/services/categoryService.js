@@ -6,7 +6,7 @@ const getAll = async () => {
         const categories = await categoryModel.getAll();
 
         // verifica se categories é um objeto de erro
-        if (categories.code) return { code: categories.code, message: categories.message };
+        if (categories.code) throw { code: categories.code, message: categories.message };
     
         return categories;
     } catch ({ code, message }) {
