@@ -35,6 +35,9 @@ const create = async (name) => {
         const { insertedId } = await db.collection('Categories').insertOne({name});
     
         if (!insertedId) return false;
+
+        // imprime log de cadastro
+        logReport('info', 201, `Cadastro: Categoria ${insertedId}`);
     
         return true;
     } catch ({ code, message }) {
