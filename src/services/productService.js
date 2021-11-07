@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 
 const { productModel } = require('../models');
-const { productValid } = require('../schemas');
+const { productValid, logReport } = require('../schemas');
 
 const getAll = async (category) => {
     try{
@@ -52,7 +52,40 @@ const create = async (product) => {
     }
 };
 
+const sell = async (order) => {
+    try{
+        const { userId, productId, price, quantity } = order;
+
+        const prodId = ObjectId(productId);
+
+        const usId = ObjectId(userId);
+    
+        if (!usId.isValid()) {
+            throw { code: 400, message: 'Id do usuário inválido' }
+        }
+
+        if (!prodId.isValid()) {
+            throw { code: 400, message: 'Id do produto inválido' }
+        }
+
+        const totalPrice = price * quantity;
+
+        const result = await productModel.sell({
+            userId: usId.toString(),
+            productId: prodId.toString(),
+            totalPrice,
+        });
+
+        if (result.code) throw { code: result.code, message: result.message };
+
+        return {message: 'Venda concluída com sucesso!'}
+    } catch ({ code, message }) {
+        return { code, message };
+    }
+};
+
 module.exports = {
     getAll,
     create,
+    sell,
 }

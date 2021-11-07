@@ -33,11 +33,20 @@ const getAll = async (category) => {
 };
 
 const getByName = async (name) => {
-    const db = await connection();
+    try {
+        const db = await connection();
 
-    const product = await db.collection('Products').findOne({name});
+        const product = await db.collection('Products').findOne({name});
 
-    return product;
+        if (!product) throw { code: 400, message: 'produto não encontrado' };
+
+        // imprime log de consultaa
+        logReport('info', 200, `Consulta: Produto ${Object(product._id).toString()}`);
+
+        return product;
+    } catch ({ code, message }) {
+        return { code, message };
+    }  
 };
 
 const create = async (product) => {
@@ -57,8 +66,22 @@ const create = async (product) => {
     }  
 };
 
+const sell = async (order) => {
+    const db = await connection();
+
+    const { insertedId } = await db.collection('Sells').insertOne(order);
+
+    if (!insertedId) throw { code: 500, message: 'produto não encontrado' };
+
+    // imprime log de consultaa
+    logReport('info', 201, `Venda: Usuário ${order.userId} - Produto ${order.productId}`);
+
+    return true;
+};
+
 module.exports = {
     getAll,
     getByName,
     create,
+    sell
 };

@@ -8,4 +8,6 @@ route.post('/create', productController.create);
 
 route.get('/', productController.getAll);
 
+route.post('/:id', productController.sell)
+
 module.exports = route;

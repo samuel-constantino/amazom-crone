@@ -69,5 +69,5 @@ const login = async (data) => {
 module.exports = {
     getAll,
     create,
-    login
+    login,
 };

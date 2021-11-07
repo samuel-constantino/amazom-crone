@@ -36,13 +36,8 @@ const login = rescue(async (req, res, next) => {
     return res.status(200).json({message: `Bem Vindo(a) ${result.name}`});
 });
 
-const buy = rescue(async (req, res) => {
-    res.status(200).json({message: 'userController buy OK'});
-});
-
 module.exports = {
     getAll,
     create,
-    login,
-    buy
+    login
 };
