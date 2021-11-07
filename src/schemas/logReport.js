@@ -11,10 +11,9 @@ const getDate = () => {
 
 const logReport = (type, code, message) => {
     try {
-        console.log(getDate())
         if (type === 'error') {
             return logger
-                .error(`[${new Date()}]` `CODE: ${code} | MESSAGE: ${message}`);
+                .error(`CODE: ${code} | MESSAGE: ${message} | DATE: ${getDate()}`);
         };
     
         if (type === 'info') {
@@ -24,7 +23,7 @@ const logReport = (type, code, message) => {
 
         throw new Error({message: 'Tipo de logger inválido'});
     } catch (e) {
-        return logger.error(`ERRO AO RETORNAR LOGGER | MESSAGE: ${e.message}`);
+        return logger.error(`CODE: 500 | MESSAGE: ERRO AO RETORNAR LOGGER - ${e.message}`);
     }
 };
 

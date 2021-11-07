@@ -1,4 +1,4 @@
-const logger = require('../logger');
+const logReport = require('../schemas/logReport');
 
 module.exports = (err, _req, res, _next) => {
   
@@ -14,7 +14,7 @@ module.exports = (err, _req, res, _next) => {
     const status = statusByErrorCode.find(e => e === err.code) || 500;
 
     // Imprime log de erro
-    logger.error(`CODE: ${status} | MESSAGE: ${err.message}`);
+    logReport('error', status, err.message);
     
     // Por último, retornamos o status e a mensagem de erro para o client
     res.status(status).json({ error: { message: err.message } });
