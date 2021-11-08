@@ -21,6 +21,11 @@ const getByName = async (name) => {
         const db = await connection();
     
         const category = await db.collection('Categories').findOne({name});
+
+        if (category) {
+            // imprime log de consulta
+            logReport('info', 200, `Consulta: Categoria ${category}`);
+        }
     
         return category;
     } catch ({ code, message }) {

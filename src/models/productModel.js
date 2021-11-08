@@ -38,10 +38,10 @@ const getByName = async (name) => {
 
         const product = await db.collection('Products').findOne({name});
 
-        if (!product) throw { code: 400, message: 'produto não encontrado' };
-
-        // imprime log de consultaa
-        logReport('info', 200, `Consulta: Produto ${Object(product._id).toString()}`);
+        if (product) {
+            // imprime log de consulta
+            logReport('info', 200, `Consulta: Produto ${Object(product._id).toString()}`);
+        }
 
         return product;
     } catch ({ code, message }) {
