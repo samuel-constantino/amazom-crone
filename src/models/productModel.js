@@ -66,22 +66,59 @@ const create = async (product) => {
     }  
 };
 
+const getSells = async (sellId) => {
+    try{
+        const db = await connection();
+
+        let sells = [];
+
+        if (!sellId || sellId === '') {
+            sells = await db.collection('Sells').find().toArray();
+
+            // imprime log de consulta
+            logReport('info', 200, `Consulta : Todas as vendas.`);
+
+            return sells;
+        } else {
+            const sell = await db.collection('Sells').findOne({_id: ObjectId(sellId)});
+            
+            if (!sell) {
+                // imprime log de consulta
+                logReport('error', 400, `Consulta : Venda não encontrada.`);
+                throw {code: 400, message: 'Venda não encontrada.'}
+            }
+
+            // imprime log de consulta
+            logReport('info', 200, `Consulta : Venda ${sellId}`);
+
+            return sell;
+        };
+    } catch ({ code, message }) {
+        return { code, message };
+    }
+};
+
 const sell = async (order) => {
-    const db = await connection();
+    try {
+        const db = await connection();
 
-    const { insertedId } = await db.collection('Sells').insertOne(order);
-
-    if (!insertedId) throw { code: 500, message: 'produto não encontrado' };
-
-    // imprime log de consultaa
-    logReport('info', 201, `Venda: Usuário ${order.userId} - Produto ${order.productId}`);
-
-    return true;
+        const { insertedId } = await db.collection('Sells').insertOne(order);
+        console.log(insertedId)
+        if (!insertedId) throw { code: 500, message: 'produto não encontrado' };
+    
+        // imprime log de consultaa
+        logReport('info', 201, `Venda: Usuário ${order.userId} - Produto ${order.productId}`);
+    
+        return true;
+    } catch ({ code, message }) {
+        return { code, message }
+    }
 };
 
 module.exports = {
     getAll,
     getByName,
     create,
-    sell
+    sell,
+    getSells,
 };

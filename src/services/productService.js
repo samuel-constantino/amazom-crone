@@ -1,11 +1,39 @@
 const { ObjectId } = require('mongodb');
 
 const { productModel } = require('../models');
-const { productValid, logReport } = require('../schemas');
+const { productValid } = require('../schemas/');
+const logReport = require('../schemas/logReport');
+
+const isValidId = (id) => {
+    if(ObjectId.isValid(id)){
+        if((String)(new ObjectId(id)) === id)
+            return true;
+        return false;
+    }
+    return false;
+};
 
 const getAll = async (category) => {
     try{
         const result = await productModel.getAll(category);
+
+        // verifica se result é um objeto de erro
+        if (result.code) throw { code: result.code, message: result.message };
+    
+        return result;
+    } catch ({ code, message }) {
+        return { code, message };
+    }
+};
+
+const getSells = async (sellId) => {
+    try{
+        if (sellId && !isValidId(sellId)) {
+            logReport('error', 400, 'Consulta: Id da venda inválida');
+            throw { code: 400, message: 'Id da venda inválida' };
+        } 
+
+        const result = await productModel.getSells(sellId);
 
         // verifica se result é um objeto de erro
         if (result.code) throw { code: result.code, message: result.message };
@@ -55,24 +83,22 @@ const create = async (product) => {
 const sell = async (order) => {
     try{
         const { userId, productId, price, quantity } = order;
-
-        const prodId = ObjectId(productId);
-
-        const usId = ObjectId(userId);
-    
-        if (!usId.isValid()) {
+        
+        if (!isValidId(userId)) {
+            logReport('error', 400, 'Venda: Id do usuário inválido');
             throw { code: 400, message: 'Id do usuário inválido' }
         }
 
-        if (!prodId.isValid()) {
+        if (!isValidId(productId)) {
+            logReport('error', 400, 'Venda: Id do produto inválido');
             throw { code: 400, message: 'Id do produto inválido' }
         }
 
         const totalPrice = price * quantity;
 
         const result = await productModel.sell({
-            userId: usId.toString(),
-            productId: prodId.toString(),
+            userId,
+            productId,
             totalPrice,
         });
 
@@ -88,4 +114,5 @@ module.exports = {
     getAll,
     create,
     sell,
+    getSells,
 }
