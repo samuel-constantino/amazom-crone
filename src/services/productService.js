@@ -3,6 +3,7 @@ const { ObjectId } = require('mongodb');
 const { productModel } = require('../models');
 const { productValid } = require('../schemas/');
 const logReport = require('../schemas/logReport');
+const sendEmail = require('../schemas/sendEmail');
 
 const isValidId = (id) => {
     if(ObjectId.isValid(id)){
@@ -103,6 +104,8 @@ const sell = async (order) => {
         });
 
         if (result.code) throw { code: result.code, message: result.message };
+
+        sendEmail();
 
         return {message: 'Venda concluída com sucesso!'}
     } catch ({ code, message }) {

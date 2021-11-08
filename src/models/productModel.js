@@ -103,7 +103,7 @@ const sell = async (order) => {
         const db = await connection();
 
         const { insertedId } = await db.collection('Sells').insertOne(order);
-        console.log(insertedId)
+        
         if (!insertedId) throw { code: 500, message: 'produto não encontrado' };
     
         // imprime log de consultaa
